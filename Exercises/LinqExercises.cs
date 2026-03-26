@@ -30,7 +30,7 @@ public sealed class LinqExercises
     /// </summary>
     public IEnumerable<string> Task02_StudentEmailAddresses()
     {
-        throw NotImplemented(nameof(Task02_StudentEmailAddresses));
+       return UniversityData.Students.Select(s => s.Email).ToList();
     }
 
     /// <summary>
