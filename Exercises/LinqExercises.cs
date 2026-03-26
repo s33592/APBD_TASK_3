@@ -93,7 +93,7 @@ public sealed class LinqExercises
     /// </summary>
     public IEnumerable<string> Task06_DoAllLecturersHaveDepartment()
     {
-        throw NotImplemented(nameof(Task06_DoAllLecturersHaveDepartment));
+        yield return (UniversityData.Lecturers.All(l => l.Department != null) ? "Yes" : "No");
     }
 
     /// <summary>
