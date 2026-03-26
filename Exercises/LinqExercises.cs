@@ -107,7 +107,7 @@ public sealed class LinqExercises
     /// </summary>
     public IEnumerable<string> Task07_CountActiveEnrollments()
     {
-        throw NotImplemented(nameof(Task07_CountActiveEnrollments));
+        yield return UniversityData.Enrollments.Where(e => e.IsActive).Count().ToString();
     }
 
     /// <summary>
