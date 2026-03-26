@@ -61,10 +61,7 @@ public sealed class LinqExercises
     public IEnumerable<string> Task04_FirstAnalyticsCourse()
     {
         var course = UniversityData.Courses.Where(c => c.Category == "Analytics").FirstOrDefault();
-        if (course == null)
-            return new List<string> { "No courses in the Analytics category found" };
-        else
-            return new List<string> { $"{course.Title} {course.StartDate}" };
+        yield return (course == null ? "No courses in the Analytics category found" : $"{course.Title} {course.StartDate}");
     }
 
     /// <summary>
@@ -81,7 +78,7 @@ public sealed class LinqExercises
     /// </summary>
     public IEnumerable<string> Task05_IsThereAnyInactiveEnrollment()
     {
-        throw NotImplemented(nameof(Task05_IsThereAnyInactiveEnrollment));
+        yield return (UniversityData.Enrollments.Any(e => !e.IsActive) ? "Yes" : "No");
     }
 
     /// <summary>
