@@ -60,7 +60,11 @@ public sealed class LinqExercises
     /// </summary>
     public IEnumerable<string> Task04_FirstAnalyticsCourse()
     {
-        throw NotImplemented(nameof(Task04_FirstAnalyticsCourse));
+        var course = UniversityData.Courses.Where(c => c.Category == "Analytics").FirstOrDefault();
+        if (course == null)
+            return new List<string> { "No courses in the Analytics category found" };
+        else
+            return new List<string> { $"{course.Title} {course.StartDate}" };
     }
 
     /// <summary>
