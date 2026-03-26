@@ -136,7 +136,7 @@ public sealed class LinqExercises
     /// </summary>
     public IEnumerable<string> Task09_ThreeNewestEnrollments()
     {
-        throw NotImplemented(nameof(Task09_ThreeNewestEnrollments));
+        return UniversityData.Enrollments.OrderByDescending(e => e.EnrollmentDate).Take(3).Select(e => $"{e.EnrollmentDate} {e.StudentId} {e.CourseId}");
     }
 
     /// <summary>
