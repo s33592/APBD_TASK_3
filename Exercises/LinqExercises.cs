@@ -152,7 +152,7 @@ public sealed class LinqExercises
     /// </summary>
     public IEnumerable<string> Task10_SecondPageOfCourses()
     {
-        throw NotImplemented(nameof(Task10_SecondPageOfCourses));
+        return UniversityData.Courses.OrderBy(c => c.Title).Skip(2).Take(2).Select(c => $"{c.Title} {c.Category}");
     }
 
     /// <summary>
