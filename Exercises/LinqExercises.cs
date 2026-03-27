@@ -186,7 +186,8 @@ public sealed class LinqExercises
     /// </summary>
     public IEnumerable<string> Task12_StudentCoursePairs()
     {
-        throw NotImplemented(nameof(Task12_StudentCoursePairs));
+        return UniversityData.Enrollments.SelectMany(e => UniversityData.Students.Where(s => s.Id == e.StudentId),(e,s) => new { e,s })
+                                         .SelectMany(es => UniversityData.Courses.Where(c => c.Id == es.e.CourseId),(es,c) => $"{es.s.FirstName} {es.s.LastName} {c.Title}");
     }
 
     /// <summary>
