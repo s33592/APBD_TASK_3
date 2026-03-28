@@ -31,7 +31,7 @@ public sealed class LinqExercises
     /// </summary>
     public IEnumerable<string> Task02_StudentEmailAddresses()
     {
-       return UniversityData.Students.Select(s => s.Email).ToList();
+       return UniversityData.Students.Select(s => s.Email);
     }
 
     /// <summary>
@@ -258,7 +258,16 @@ public sealed class LinqExercises
     /// </summary>
     public IEnumerable<string> Task15_LecturersAndCourseCounts()
     {
-        throw NotImplemented(nameof(Task15_LecturersAndCourseCounts));
+        return UniversityData.Lecturers.GroupJoin(UniversityData.Courses,
+                                             l => l.Id,
+                                             c => c.LecturerId,
+                                             (lecturer, matchedCourses) => new
+                                             {
+                                                 LecturerFirstName = lecturer.FirstName,
+                                                 LecturerLastName = lecturer.LastName,
+                                                 CourseCount = matchedCourses.Count()
+                                             })
+                                       .Select(result => $"{result.LecturerFirstName} {result.LecturerLastName} {result.CourseCount}");
     }
 
     /// <summary>
