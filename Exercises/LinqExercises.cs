@@ -284,7 +284,24 @@ public sealed class LinqExercises
     /// </summary>
     public IEnumerable<string> Task16_HighestGradePerStudent()
     {
-        throw NotImplemented(nameof(Task16_HighestGradePerStudent));
+        return UniversityData.Enrollments.Where(e => e.FinalGrade != null)
+                                         .Join(UniversityData.Students,
+                                            e => e.StudentId,
+                                            s => s.Id,
+                                            (e, s) => new
+                                            {
+                                                StudentFirstName = s.FirstName,
+                                                StudentLastName = s.LastName,
+                                                EnrollmentFinalGrade = e.FinalGrade
+                                            })
+                                       .GroupBy(s => new { s.StudentFirstName, s.StudentLastName },
+                                                (s, grades) => new
+                                                {
+                                                    StudentFirstName = s.StudentFirstName,
+                                                    StudentLastName = s.StudentLastName,
+                                                    MaxFinalGrade = grades.Max(grade => grade.EnrollmentFinalGrade)
+                                                })
+                                       .Select(result => $"{result.StudentFirstName} {result.StudentLastName} {result.MaxFinalGrade:F1}");
     }
 
     /// <summary>
