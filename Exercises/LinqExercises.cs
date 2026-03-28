@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using LinqConsoleLab.EN.Data;
 
 namespace LinqConsoleLab.EN.Exercises;
@@ -225,7 +226,23 @@ public sealed class LinqExercises
     /// </summary>
     public IEnumerable<string> Task14_AverageGradePerCourse()
     {
-        throw NotImplemented(nameof(Task14_AverageGradePerCourse));
+        return UniversityData.Enrollments.Where(e => e.FinalGrade != null)
+                                          .Join(UniversityData.Courses,
+                                                e => e.CourseId,
+                                                c => c.Id,
+                                                (e, c) => new
+                                                {
+                                                    CourseTitle = c.Title,
+                                                    FinalGrade = e.FinalGrade
+                                                })
+                                          .GroupBy(pair => pair.CourseTitle,
+                                                   (courseTitle, grades) => new
+                                                   {
+                                                       CourseTitle = courseTitle,
+                                                       CourseAverage = grades.Average(grade => grade.FinalGrade)
+                                                   }
+                                                   )
+                                          .Select(group => $"{group.CourseTitle} {group.CourseAverage:F1}");
     }
 
     /// <summary>
