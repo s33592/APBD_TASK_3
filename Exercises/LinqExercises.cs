@@ -353,7 +353,23 @@ public sealed class LinqExercises
     /// </summary>
     public IEnumerable<string> Challenge02_AprilCoursesWithoutFinalGrades()
     {
-        throw NotImplemented(nameof(Challenge02_AprilCoursesWithoutFinalGrades));
+        return UniversityData.Courses.Where(c => c.StartDate.Month == 4 && c.StartDate.Year == 2026)
+                                     .Join(UniversityData.Enrollments,
+                                           c => c.Id,
+                                           e => e.CourseId,
+                                           (c, e) => new
+                                           {
+                                               courseTitle = c.Title,
+                                               finalGrade = e.FinalGrade
+                                           })
+                                     .GroupBy(course => course.courseTitle,
+                                              (course, grades) => new
+                                              {
+                                                  CourseTitle = course,
+                                                  Count = grades.Where(grade => grade.finalGrade != null).Count()
+                                              })
+                                     .Where(group => group.Count == 0)
+                                     .Select(result => $"{result.CourseTitle}");
     }
 
     /// <summary>
