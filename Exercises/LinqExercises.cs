@@ -319,7 +319,24 @@ public sealed class LinqExercises
     /// </summary>
     public IEnumerable<string> Challenge01_StudentsWithMoreThanOneActiveCourse()
     {
-        throw NotImplemented(nameof(Challenge01_StudentsWithMoreThanOneActiveCourse));
+        return UniversityData.Enrollments.Where(e => e.IsActive)
+                                         .Join(UniversityData.Students,
+                                               e => e.StudentId,
+                                               s => s.Id,
+                                               (e, s) => new
+                                               {
+                                                   StudentFirstName = s.FirstName,
+                                                   StudentLastName = s.LastName,
+                                               })
+                                         .GroupBy(s => new { s.StudentFirstName, s.StudentLastName },
+                                                  (s, enrollments) => new
+                                                  {
+                                                      StudentFirstName = s.StudentFirstName,
+                                                      StudentLastName = s.StudentLastName,
+                                                      Count = enrollments.Count()
+                                                  })
+                                         .Where(group => group.Count > 1)
+                                         .Select(result => $"{result.StudentFirstName} {result.StudentLastName} {result.Count}");
     }
 
     /// <summary>
