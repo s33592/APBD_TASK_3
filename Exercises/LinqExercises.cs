@@ -1,5 +1,6 @@
 using System.Text.RegularExpressions;
 using LinqConsoleLab.EN.Data;
+using LinqConsoleLab.EN.Models;
 
 namespace LinqConsoleLab.EN.Exercises;
 
@@ -387,7 +388,31 @@ public sealed class LinqExercises
     /// </summary>
     public IEnumerable<string> Challenge03_LecturersAndAverageGradeAcrossTheirCourses()
     {
-        throw NotImplemented(nameof(Challenge03_LecturersAndAverageGradeAcrossTheirCourses));
+        return UniversityData.Lecturers.GroupJoin(UniversityData.Courses,
+                                                  l => l.Id,
+                                                  c => c.LecturerId,
+                                                  (lecturer, courses) => new { lecturer, courses }
+                                                  )
+                                       .SelectMany(lecturerCourses => lecturerCourses.courses.DefaultIfEmpty(),
+                                                   (lecturerCourses, c) => new { lecturer = lecturerCourses.lecturer, courseId = c != null ? c.Id : -1}
+                                                   )
+                                       .GroupJoin(UniversityData.Enrollments,
+                                                  lecturerCourse => lecturerCourse.courseId,
+                                                  e => e.CourseId,
+                                                  (lecturerCourse, enrollments) => new { lecturer = lecturerCourse.lecturer, enrollments }
+                                                  )
+                                       .SelectMany(lecturerEnrollments => lecturerEnrollments.enrollments.DefaultIfEmpty(),
+                                                   (lecturerEnrollments, e) => new { FirstName = lecturerEnrollments.lecturer.FirstName, LastName = lecturerEnrollments.lecturer.LastName, FinalGrade = e?.FinalGrade }
+                                                  )
+                                       .Where(lecturerEnrollment => lecturerEnrollment.FinalGrade != null)
+                                       .GroupBy(lecturerEnrollment => new { lecturerEnrollment.FirstName, lecturerEnrollment.LastName },
+                                                (lecturerEnrollment, grades) => new
+                                                {
+                                                    FirstName = lecturerEnrollment.FirstName,
+                                                    LastName = lecturerEnrollment.LastName,
+                                                    Average = grades.Average(grade => grade.FinalGrade)
+                                                })
+                                       .Select(result => $"{result.FirstName} {result.LastName} {result.Average:F1}");
     }
 
     /// <summary>
