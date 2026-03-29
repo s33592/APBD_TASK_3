@@ -430,7 +430,19 @@ public sealed class LinqExercises
     /// </summary>
     public IEnumerable<string> Challenge04_CitiesAndActiveEnrollmentCounts()
     {
-        throw NotImplemented(nameof(Challenge04_CitiesAndActiveEnrollmentCounts));
+        return UniversityData.Students.Join(UniversityData.Enrollments,
+                                            s => s.Id,
+                                            e => e.StudentId,
+                                            (s, e) => new { City = s.City, IsActive = e.IsActive })
+                                      .Where(studentEnrollment => studentEnrollment.IsActive)
+                                      .GroupBy(studentEnrollment => studentEnrollment.City,
+                                               (city, studentEnrollment) => new
+                                               {
+                                                   City = city,
+                                                   Count = studentEnrollment.Count()
+                                               })
+                                      .OrderByDescending(group => group.Count)
+                                      .Select(result => $"{result.City} {result.Count}");                       
     }
 
     private static NotImplementedException NotImplemented(string methodName)
